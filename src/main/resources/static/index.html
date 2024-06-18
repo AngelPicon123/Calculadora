@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora de Chinolo</title>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+    .container {
+        max-width: 400px;
+        margin: auto;
+    }
+    input, select {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    button {
+        padding: 10px;
+        width: 100%;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Calculadora de Chinolo</h1>
+    <form id="calculator-form">
+        <input type="number" id="number1" placeholder="INGRESA EL PRIMER VALOR" required>
+        <input type="number" id="number2" placeholder="INGRESA EL SEGUNDO VALOR" required>
+        <select id="operation">
+            <option value="suma">sumar</option>
+            <option value="resta">restar</option>
+            <option value="multiplicacion">multiplicar</option>
+            <option value="division">dividir</option>
+        </select>
+        <button type="submit">Calcular</button>
+    </form>
+    <h2>Resultado: <span id="result">.....</span></h2>
+</div>
+<script>
+    document.getElementById('calculator-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const number1 = document.getElementById('number1').value;
+        const number2 = document.getElementById('number2').value;
+        const operation = document.getElementById('operation').value;
+
+        fetch('http://localhost:8081/calculator/calculate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                number1: parseFloat(number1),
+                number2: parseFloat(number2),
+                operation: operation
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('result').textContent = data;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('result').textContent = 'Error';
+        });
+    });
+</script>
+</body>
+</html>
